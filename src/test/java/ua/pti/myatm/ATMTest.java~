@@ -16,6 +16,8 @@ import org.mockito.*;
  */
 public class ATMTest {
 
+
+
     @Test
     public void testGetMoneyInATM() {
         System.out.println("getMoneyInATM");
