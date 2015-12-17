@@ -14,12 +14,6 @@ public class ATM {
 	public class NotEnoughMoneyInATMException extends RuntimeException {
 
 	}
-        public class IncorrectMoneyException extends RuntimeException {
-        
-        }
-        public class CardNotValidnessException extends RuntimeException {
-
-        }
 	
         
     //Можно задавать количество денег в банкомате 
@@ -72,16 +66,4 @@ public class ATM {
     	this.moneyInATM -= amount;
     	return this.currentCard.getAccount().getBalance();
     }
-    public double addCash(double amount){
-        
-        if (amount < 0)
-                throw new IncorrectMoneyException();
-        boolean validness = (this.currentCard.checkPin(pinCode) && !this.currentCard.isBlocked());
-    	if (!validness)
-                throw new CardNotValidnessException();
-    		
-        this.currentCard.getAccount().adddraw(amount);
-    	this.moneyInATM += amount;
-    	return this.currentCard.getAccount().getBalance();
-
 }

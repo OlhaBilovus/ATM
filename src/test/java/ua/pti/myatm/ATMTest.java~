@@ -206,30 +206,6 @@ public class ATMTest {
         InOrder order = inOrder(account);
         order.verify(account).getBalance();
         order.verify(account).withdraw(accountWithdraw);
-        verify(account, atLeastOnce()).withdraw(accountWithdraw);
-    }
-
-    @Test
-    public void testWithdrawWithAmountAtLeastOnce(){
-    	System.out.println("Method order check for getCash method");
-        double ATMBalance = 200.0;
-        double accountBalance = 100.0;
-        double accountWithdraw = 90.0;
-        //double accountBalanceAfter = 10.0;
-        
-        Account account = mock(Account.class);
-        when(account.getBalance()).thenReturn(accountBalance);
-        when(account.withdraw(accountWithdraw)).thenReturn(accountWithdraw);
-        
-        Card card = mock(Card.class);
-        when(card.getAccount()).thenReturn(account);
-        when(card.checkPin(anyInt())).thenReturn(true);
-        when(card.isBlocked()).thenReturn(false);
-        
-        ATM instance = new ATM(ATMBalance);
-        instance.validateCard(card, 1234);
-        double result = instance.getCash(accountWithdraw);
-        verify(account, times(1)).withdraw(accountWithdraw);
     }
 
 }
