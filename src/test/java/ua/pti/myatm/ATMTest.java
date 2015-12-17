@@ -208,7 +208,7 @@ public class ATMTest {
         order.verify(account).withdraw(accountWithdraw);
     }
 
-     @Test
+    @Test
     public void testAddCash() {
         System.out.println("addCash");
         double accountBalanceBefore = 900.0;

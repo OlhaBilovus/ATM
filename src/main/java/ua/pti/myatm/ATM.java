@@ -72,13 +72,14 @@ public class ATM {
     	this.moneyInATM -= amount;
     	return this.currentCard.getAccount().getBalance();
     }
+
     public double addCash(double amount){
         
         if (amount < 0)
                 throw new IncorrectMoneyException();
-        boolean validness = (this.currentCard.checkPin(pinCode) && !this.currentCard.isBlocked());
-    	if (!validness)
-                throw new CardNotValidnessException();
+        //boolean valid = (this.currentCard.checkPin(pinCode) && !this.currentCard.isBlocked());
+    	//if (!valid)
+               // throw new CardNotValidnessException();
     		
         this.currentCard.getAccount().adddraw(amount);
     	this.moneyInATM += amount;
