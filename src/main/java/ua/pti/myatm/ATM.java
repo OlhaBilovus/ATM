@@ -40,11 +40,12 @@ public class ATM {
     public boolean validateCard(Card card, int pinCode){
     	if (card == null)
     		throw new NoCardInsertedException();
-    	boolean validness = (card.checkPin(pinCode) && !card.isBlocked());
-    	if (validness){
-    		this.currentCard = card;
+    	
+    	if (!card.checkPin(pinCode) || card.isBlocked()){
+    		return false;
     	}
-    	return validness;
+        this.currentCard = card;
+    	return true;
     }
     
     //Возвращает сколько денег есть на счету
@@ -75,14 +76,15 @@ public class ATM {
 
     public double addCash(double amount){
         
-        if (amount < 0)
-                throw new IncorrectMoneyException();
-        //boolean valid = (this.currentCard.checkPin(pinCode) && !this.currentCard.isBlocked());
-    	//if (!valid)
-               // throw new CardNotValidnessException();
-    		
-        this.currentCard.getAccount().adddraw(amount);
-    	this.moneyInATM += amount;
-    	return this.currentCard.getAccount().getBalance();
+        if (amount <= 0.0){
+            throw new IncorrectMoneyException();
+        }
+        if (this.currentCard == null){
+            throw new NoCardInsertedException();
+        }   		
+           this.currentCard.getAccount().adddraw(amount);
+    	   this.moneyInATM += amount;
+    	   return this.currentCard.getAccount().getBalance();
 
+    }
 }

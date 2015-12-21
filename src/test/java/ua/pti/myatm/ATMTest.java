@@ -57,9 +57,9 @@ public class ATMTest {
         Card card = mock(Card.class);
         int pinCode = 1234;
         when(card.checkPin(pinCode)).thenReturn(true);
-        when(card.isBlocked()).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
         ATM instance = new ATM(10.0);
-        boolean expResult = false;
+        boolean expResult = true;
         boolean result = instance.validateCard(card, pinCode);
         assertEquals(expResult, result);
     }
@@ -215,30 +215,32 @@ public class ATMTest {
         double amountForAdddraw = 100.0;
         double accountBalanceAfter = 1000.0;
         Account account = mock(Account.class);
-        when(account.getBalance()).thenReturn(accountBalanceBefore).thenReturn(accountBalanceAfter);
-        when(account.adddraw(amountForAdddraw)).thenReturn(amountForAdddraw);
+        //when(account.getBalance()).thenReturn(accountBalanceAfter);
+        //when(account.adddraw(amountForAdddraw)).thenReturn(amountForAdddraw);
         
         Card card = mock(Card.class);
         when(card.getAccount()).thenReturn(account);
         when(card.checkPin(anyInt())).thenReturn(true);
         when(card.isBlocked()).thenReturn(false);
         
-        ATM instance = new ATM(1000.0);
-        instance.validateCard(card,12345);
+        ATM instance = new ATM(900.0);
+        instance.validateCard(card,1234);
         double expResult = accountBalanceAfter;
-        double result = instance.addCash(amountForAdddraw);
+        instance.addCash(amountForAdddraw);
+        double result = instance.getMoneyInATM();
         assertEquals(expResult, result, 0.0);
     }
 
     @Test(expected = ATM.IncorrectMoneyException.class)
-    public void testAddCashWithIncorrectMoney(){
-    	System.out.println("addCash with Incorrect Money");
+    public void testAddCashWithIncorrectMoneyLessZero(){
+    	System.out.println("addCash with Incorrect Money (less zero)");
     	double ATMBalance = 100.0;
     	ATM instance = new ATM(ATMBalance);
     	double accountBalance = 50.0;
         double accountAdddraw = -70.0;
+        instance.addCash(accountAdddraw);
 
-        Account account = mock(Account.class);
+     /*   Account account = mock(Account.class);
         when(account.getBalance()).thenReturn(accountBalance);
         when(account.adddraw(accountAdddraw)).thenReturn(accountAdddraw);
 
@@ -248,7 +250,62 @@ public class ATMTest {
         when(card.isBlocked()).thenReturn(false);
         instance.validateCard(card, 1234);
 
-        double result = instance.addCash(accountAdddraw);
+        double result = instance.addCash(accountAdddraw); */
     }
+
+    @Test(expected = ATM.IncorrectMoneyException.class)
+    public void testAddCashWithIncorrectMoneyEqualZero(){
+        System.out.println("addCash with Incorrect Money (equal zero)");
+        double ATMBalance = 100.0;
+        ATM instance = new ATM(ATMBalance);
+        double accountBalance = 50.0;
+        double accountAdddraw = 0.0;
+
+        /*Account account = mock(Account.class);
+        when(account.getBalance()).thenReturn(accountBalance);
+        when(account.adddraw(accountAdddraw)).thenReturn(accountAdddraw);
+
+        Card card = mock(Card.class);
+        when(card.getAccount()).thenReturn(account);
+        when(card.checkPin(anyInt())).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        instance.validateCard(card, 1234);*/
+
+        instance.addCash(accountAdddraw);
+    }
+
+    @Test(expected = ATM.NoCardInsertedException.class)
+    public void textAddCashWitoutCard() {
+        System.out.println("addCash without inserted(valid) card");
+        double ATMBalance = 200.0;
+        ATM instance = new ATM(ATMBalance);
+        double accountAdddraw = 1.0;
+        instance.addCash(accountAdddraw);
+    }
+ 
+
+     @Test
+    public void testAdddrawAddAmountAtLeastOnce(){
+        System.out.println("Method order check for addCash method ");
+        double ATMBalance = 200.0;
+        double accountBalance = 90.0;
+        double accountAdddraw = 10.0;
+        //double accountBalanceAfter = 100.0;
+        
+        Account account = mock(Account.class);
+        //when(account.getBalance()).thenReturn(accountBalance);
+        //when(account.adddraw(accountAdddraw)).thenReturn(accountAdddraw);
+        
+        Card card = mock(Card.class);
+        when(card.getAccount()).thenReturn(account);
+        when(card.checkPin(anyInt())).thenReturn(true);
+        when(card.isBlocked()).thenReturn(false);
+        
+        ATM instance = new ATM(ATMBalance);
+        instance.validateCard(card, 1234);
+        instance.addCash(accountAdddraw);
+        verify(account, times(1)).adddraw(accountAdddraw);
+    }
+
 
 }
